@@ -4,6 +4,7 @@ import { join } from 'path';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -14,9 +15,11 @@ import { AppService } from './app.service';
       username: 'student',
       password: 'student',
       database: 'kupipodariday',
-      entities: [join(__dirname, 'src', '**', '*.entity{.ts,.js}')],
+      entities: [join(__dirname, '**', '*.entity{.ts,.js}')],
       synchronize: false,
+      uuidExtension: 'uuid-ossp',
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
