@@ -23,7 +23,6 @@ export class User {
   email: string;
 
   @Column()
-  @Length(3, 30)
   password: string;
 
   @Column({ unique: true })
