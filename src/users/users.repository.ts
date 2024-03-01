@@ -3,7 +3,6 @@ import { Repository } from 'typeorm';
 import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { User } from './entities/users.entity';
-import { UserDto } from './dto/userDto';
 import { CreateUserDto } from './dto/createUser.dto';
 
 @Injectable()
@@ -16,13 +15,14 @@ export class UsersRepository {
     return this.userRepository.find();
   }
 
-  findById(id: UserDto['id']): Promise<User> {
+  findById(id: User['id']): Promise<User> {
     return this.userRepository.findOneBy({ id });
   }
 
-  async save(user: CreateUserDto): Promise<User> {
+  async save(createUserDto: CreateUserDto): Promise<User> {
     const existingUser =
-      user.id && (await this.userRepository.findOneBy({ id: user.id }));
+      createUserDto.id &&
+      (await this.userRepository.findOneBy({ id: createUserDto.id }));
 
     if (existingUser) {
       throw new BadRequestException(
@@ -30,6 +30,6 @@ export class UsersRepository {
       );
     }
 
-    return await this.userRepository.save(user);
+    return await this.userRepository.save(createUserDto);
   }
 }

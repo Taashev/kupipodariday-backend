@@ -26,7 +26,7 @@ export class User {
   @Column({ unique: true })
   username: string;
 
-  @Column({ default: 'Пока ничего не рассказал о себе' })
+  @Column({ length: 200, default: 'Пока ничего не рассказал о себе' })
   about: string;
 
   @Column({ default: 'https://i.pravatar.cc/300' })
