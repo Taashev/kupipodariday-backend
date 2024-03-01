@@ -2,6 +2,7 @@ import { Controller, Get, Param } from '@nestjs/common';
 
 import { UsersService } from './users.service';
 import { User } from './entities/users.entity';
+import { UserDto } from './dto/userDto';
 
 @Controller('users')
 export class UsersController {
@@ -13,7 +14,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  findById(@Param('id') id: User['id']): Promise<User> {
+  findById(@Param('id') id: UserDto['id']): Promise<User> {
     return this.usersService.findById(id);
   }
 }

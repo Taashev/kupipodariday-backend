@@ -1,10 +1,4 @@
-import {
-  Body,
-  Controller,
-  Post,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 
 import { UsersService } from './users.service';
 import { User } from './entities/users.entity';
@@ -15,7 +9,6 @@ export class SignUpController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  @UsePipes(new ValidationPipe())
   createUser(@Body() user: CreateUserDto): Promise<User> {
     return this.usersService.createUser(user);
   }
