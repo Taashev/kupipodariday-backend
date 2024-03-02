@@ -1,10 +1,13 @@
+import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
+
+import { UsersModule } from './users/users.module';
+import { PassportModule } from './passport/passport.module';
 
 import { AppController } from './app.controller';
+
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -20,6 +23,7 @@ import { UsersModule } from './users/users.module';
       uuidExtension: 'uuid-ossp',
     }),
     UsersModule,
+    PassportModule,
   ],
   controllers: [AppController],
   providers: [AppService],

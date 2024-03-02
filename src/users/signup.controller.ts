@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/createUser.dto';
-import { SignupUserResponseDto } from './dto/signupUserResponse.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { SignupUserResponseDto } from './dto/signup-user-response.dto';
 
 @Controller('signup')
 export class SignUpController {

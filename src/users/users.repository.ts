@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { User } from './entities/users.entity';
-import { CreateUserDto } from './dto/createUser.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersRepository {

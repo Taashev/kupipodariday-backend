@@ -5,7 +5,7 @@ import { SALT } from '../utils/constants';
 
 import { UsersRepository } from './users.repository';
 import { User } from './entities/users.entity';
-import { CreateUserDto } from './dto/createUser.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {

@@ -8,7 +8,7 @@ import {
 
 import { UsersService } from './users.service';
 import { User } from './entities/users.entity';
-import { UserPublicProfileResponseDto } from './dto/userPublicProfileResponse.dto';
+import { UserPublicProfileResponseDto } from './dto/user-public-profile-response.dto';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
