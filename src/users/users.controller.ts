@@ -28,11 +28,11 @@ export class UsersController {
     return usersPublicProfileResponseDto;
   }
 
-  @Get(':id')
-  async findById(
-    @Param('id') id: User['id'],
+  @Get(':username')
+  async findByUsername(
+    @Param('username') username: User['username'],
   ): Promise<UserPublicProfileResponseDto> {
-    const user = await this.usersService.findById(id);
+    const user = await this.usersService.findByUsername(username);
 
     const userPublicProfileResponseDto =
       this.usersService.serializeUserResponseDto(

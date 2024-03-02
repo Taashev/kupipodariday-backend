@@ -11,12 +11,14 @@ export class UsersRepository {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  findAll(): Promise<User[]> {
-    return this.userRepository.find();
+  async findAll(): Promise<User[]> {
+    return await this.userRepository.find();
   }
 
-  findById(id: User['id']): Promise<User> {
-    return this.userRepository.findOneBy({ id });
+  async findByUsername(username: User['username']): Promise<User> {
+    const user = await this.userRepository.findOneBy({ username });
+
+    return user;
   }
 
   async save(createUserDto: CreateUserDto): Promise<User> {

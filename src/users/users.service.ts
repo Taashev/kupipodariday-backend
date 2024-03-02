@@ -9,12 +9,12 @@ import { CreateUserDto } from './dto/createUser.dto';
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.findAll();
+  async findAll(): Promise<User[]> {
+    return await this.usersRepository.findAll();
   }
 
-  async findById(id: User['id']): Promise<User> {
-    const user = await this.usersRepository.findById(id);
+  async findByUsername(username: User['username']): Promise<User> {
+    const user = await this.usersRepository.findByUsername(username);
 
     return user;
   }
