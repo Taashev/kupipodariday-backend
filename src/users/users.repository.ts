@@ -18,12 +18,20 @@ export class UsersRepository {
   }
 
   async findById(id: User['id']): Promise<User> {
+    if (!id) {
+      throw new BadRequestException(MESSAGE_ERROR.BAD_REQUEST);
+    }
+
     const user = await this.userRepository.findOneBy({ id });
 
     return user;
   }
 
   async findByUsername(username: User['username']): Promise<User> {
+    if (!username) {
+      throw new BadRequestException(MESSAGE_ERROR.BAD_REQUEST);
+    }
+
     const user = await this.userRepository.findOneBy({ username });
 
     return user;

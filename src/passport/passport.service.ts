@@ -1,42 +1,29 @@
 import * as bcrypt from 'bcrypt';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { SignInUserDto } from './dto/signin-user.dto';
-
-import { UsersRepository } from 'src/users/users.repository';
 import { SignInUserResponseDto } from './dto/signin-user-response.dto';
 
-import { MESSAGE_ERROR } from 'src/utils/constants';
+import { User } from 'src/users/entities/users.entity';
 
 @Injectable()
 export class PassportService {
-  constructor(
-    private usersRepository: UsersRepository,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private jwtService: JwtService) {}
 
-  async authByUsernameEndPassword(
-    signInUserDto: SignInUserDto,
-  ): Promise<SignInUserResponseDto> {
-    const { username, password } = signInUserDto;
-
-    const user = await this.usersRepository.findByUsername(username);
-
-    if (!user) {
-      throw new UnauthorizedException(MESSAGE_ERROR.AUTH_USER);
-    }
-
-    const isValidPassword = await bcrypt.compare(password, user.password);
-
-    if (!isValidPassword) {
-      throw new UnauthorizedException(MESSAGE_ERROR.AUTH_USER);
-    }
-
-    const payload = { sub: user.id };
+  async auth(user: User): Promise<SignInUserResponseDto> {
+    const payload = { id: user.id };
 
     const jwt = this.jwtService.sign(payload, { expiresIn: '7d' });
 
     return { access_token: jwt };
+  }
+
+  async validatePassword(
+    password: string,
+    userPassword: string,
+  ): Promise<boolean> {
+    const isValidPassword = await bcrypt.compare(password, userPassword);
+
+    return isValidPassword;
   }
 }
