@@ -10,8 +10,10 @@ import {
 } from 'class-validator';
 
 import { User } from '../entities/users.entity';
+import { Exclude } from 'class-transformer';
 
 export class CreateUserDto {
+  @Exclude()
   @IsOptional()
   @IsString()
   @IsUUID()

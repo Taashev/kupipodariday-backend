@@ -28,13 +28,9 @@ export class UsersRepository {
   }
 
   async save(createUserDto: CreateUserDto): Promise<User> {
-    const existingUser =
-      createUserDto.id &&
-      (await this.userRepository.findOneBy({ id: createUserDto.id }));
-
-    if (existingUser) {
+    if (createUserDto.id) {
       throw new BadRequestException(
-        'User with the specified ID already exists',
+        'the ID field should be generated automatically',
       );
     }
 
