@@ -29,6 +29,7 @@ export class PassportController {
   @Post('signup')
   @UseInterceptors(ClassSerializerInterceptor)
   async signup(
+    @Res({ passthrough: true }) res: Response,
     @Body() createUserDto: CreateUserDto,
   ): Promise<SignupUserResponseDto> {
     const user = await this.usersService.createUser(createUserDto);
@@ -37,6 +38,10 @@ export class PassportController {
       SignupUserResponseDto,
       user,
     );
+
+    const jwt = await this.passportService.auth(signupUserResponseDto);
+
+    res.cookie('access_token', jwt.access_token, { httpOnly: true });
 
     return signupUserResponseDto;
   }
@@ -49,10 +54,10 @@ export class PassportController {
   ): Promise<SignInUserResponseDto> {
     const user = req.user as User;
 
-    const response = await this.passportService.auth(user);
+    const jwt = await this.passportService.auth(user);
 
-    res.cookie('access_token', response.access_token, { httpOnly: true });
+    res.cookie('access_token', jwt.access_token, { httpOnly: true });
 
-    return response;
+    return jwt;
   }
 }
