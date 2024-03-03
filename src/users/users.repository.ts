@@ -29,11 +29,19 @@ export class UsersRepository {
     return user;
   }
 
-  async save(createUserDto: CreateUserDto): Promise<User> {
+  create(createUserDto: CreateUserDto): CreateUserDto {
     if (createUserDto.id) {
       throw new BadRequestException(MESSAGE_ERROR.ID_BAD_REQUEST);
     }
 
-    return await this.userRepository.save(createUserDto);
+    const user = this.userRepository.create(createUserDto);
+
+    return user;
+  }
+
+  async save(createUserDto: CreateUserDto): Promise<User> {
+    const user = await this.userRepository.save(createUserDto);
+
+    return user;
   }
 }

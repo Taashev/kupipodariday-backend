@@ -22,11 +22,13 @@ export class UsersService {
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const hashPassword = await bcrypt.hash(createUserDto.password, SALT);
+    const user = this.usersRepository.create(createUserDto);
 
-    createUserDto.password = hashPassword;
+    const hashPassword = await bcrypt.hash(user.password, SALT);
 
-    return this.usersRepository.save(createUserDto);
+    user.password = hashPassword;
+
+    return this.usersRepository.save(user);
   }
 
   serializeUserResponseDto(ClassDto: any, user: User | User[]) {
