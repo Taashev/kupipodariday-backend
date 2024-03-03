@@ -1,15 +1,47 @@
-import { Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { PassportService } from './passport.service';
 import { Request, Response } from 'express';
-import { SignInUserResponseDto } from './dto/signin-user-response.dto';
+
 import { LocalGuard } from './guards/local.guard';
+import { SignInUserResponseDto } from './dto/signin-user-response.dto';
+import { SignupUserResponseDto } from './dto/signup-user-response.dto';
+
 import { User } from 'src/users/entities/users.entity';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { UsersService } from 'src/users/users.service';
 
-@Controller('signin')
+@Controller()
 export class PassportController {
-  constructor(private readonly passportService: PassportService) {}
+  constructor(
+    private readonly passportService: PassportService,
+    private readonly usersService: UsersService,
+  ) {}
 
-  @Post()
+  @Post('signup')
+  @UseInterceptors(ClassSerializerInterceptor)
+  async signup(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<SignupUserResponseDto> {
+    const user = await this.usersService.createUser(createUserDto);
+
+    const signupUserResponseDto = this.usersService.serializeUserResponseDto(
+      SignupUserResponseDto,
+      user,
+    );
+
+    return signupUserResponseDto;
+  }
+
+  @Post('signin')
   @UseGuards(LocalGuard)
   async signIn(
     @Req() req: Request,

@@ -17,7 +17,7 @@ import { JwtGuard } from 'src/passport/guards/jwt.guard';
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Get()
   async findAll(): Promise<UserPublicProfileResponseDto[]> {

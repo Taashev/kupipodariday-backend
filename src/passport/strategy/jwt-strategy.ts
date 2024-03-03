@@ -11,8 +11,8 @@ import { MESSAGE_ERROR } from 'src/utils/constants';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private usersRepository: UsersRepository,
-    private configService: ConfigService,
+    private readonly usersRepository: UsersRepository,
+    private readonly configService: ConfigService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([

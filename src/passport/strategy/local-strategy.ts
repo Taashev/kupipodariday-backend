@@ -11,8 +11,8 @@ import { MESSAGE_ERROR } from 'src/utils/constants';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private passportService: PassportService,
-    private usersRepository: UsersRepository,
+    private readonly passportService: PassportService,
+    private readonly usersRepository: UsersRepository,
   ) {
     super();
   }

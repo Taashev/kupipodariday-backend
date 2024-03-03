@@ -8,7 +8,7 @@ import { User } from 'src/users/entities/users.entity';
 
 @Injectable()
 export class PassportService {
-  constructor(private jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) {}
 
   async auth(user: User): Promise<SignInUserResponseDto> {
     const payload = { id: user.id };
