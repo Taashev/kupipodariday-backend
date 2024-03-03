@@ -6,6 +6,8 @@ import { ConfigService } from '@nestjs/config';
 
 import { UsersRepository } from 'src/users/users.repository';
 
+import { MESSAGE_ERROR } from 'src/utils/constants';
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
@@ -26,7 +28,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const user = await this.usersRepository.findById(jwtPayload.id);
 
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(MESSAGE_ERROR.FORBIDDEN);
     }
 
     return user;

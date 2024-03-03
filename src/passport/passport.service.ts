@@ -7,6 +7,8 @@ import { SignInUserDto } from './dto/signin-user.dto';
 import { UsersRepository } from 'src/users/users.repository';
 import { SignInUserResponseDto } from './dto/signin-user-response.dto';
 
+import { MESSAGE_ERROR } from 'src/utils/constants';
+
 @Injectable()
 export class PassportService {
   constructor(
@@ -22,13 +24,13 @@ export class PassportService {
     const user = await this.usersRepository.findByUsername(username);
 
     if (!user) {
-      throw new UnauthorizedException('Неверный логин или пароль');
+      throw new UnauthorizedException(MESSAGE_ERROR.AUTH_USER);
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
-      throw new UnauthorizedException('Неверный логин или пароль');
+      throw new UnauthorizedException(MESSAGE_ERROR.AUTH_USER);
     }
 
     const payload = { sub: user.id };

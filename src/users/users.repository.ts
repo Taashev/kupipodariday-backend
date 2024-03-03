@@ -5,6 +5,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from './entities/users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 
+import { MESSAGE_ERROR } from 'src/utils/constants';
+
 @Injectable()
 export class UsersRepository {
   constructor(
@@ -29,9 +31,7 @@ export class UsersRepository {
 
   async save(createUserDto: CreateUserDto): Promise<User> {
     if (createUserDto.id) {
-      throw new BadRequestException(
-        'the ID field should be generated automatically',
-      );
+      throw new BadRequestException(MESSAGE_ERROR.ID_BAD_REQUEST);
     }
 
     return await this.userRepository.save(createUserDto);
