@@ -15,6 +15,12 @@ export class UsersRepository {
     return await this.userRepository.find();
   }
 
+  async findById(id: User['id']): Promise<User> {
+    const user = await this.userRepository.findOneBy({ id });
+
+    return user;
+  }
+
   async findByUsername(username: User['username']): Promise<User> {
     const user = await this.userRepository.findOneBy({ username });
 
