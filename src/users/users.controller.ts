@@ -14,10 +14,10 @@ import {
 import { UsersService } from './users.service';
 import { User } from './entities/users.entity';
 import { UserPublicProfileResponseDto } from './dto/user-public-profile-response.dto';
+import { UserProfileResponseDto } from './dto/user-profile-response.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 import { JwtGuard } from 'src/passport/guards/jwt.guard';
-import { UserProfileResponseDto } from './dto/user-profile-response.dto';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -37,13 +37,18 @@ export class UsersController {
     return usersPublicProfileResponseDto;
   }
 
-  // @Get('me')
-  // @UseGuards(JwtGuard)
-  // profile(@Req() req: Request) {
-  //   const user = req.user as User;
+  @Get('me')
+  @UseGuards(JwtGuard)
+  async getCurrentUser(@Req() req: Request): Promise<UserProfileResponseDto> {
+    const requestUser = req.user as User;
 
-  //   return user;
-  // }
+    const userProfileResponseDto = this.usersService.serializeUserResponseDto(
+      UserProfileResponseDto,
+      requestUser,
+    );
+
+    return userProfileResponseDto;
+  }
 
   @Patch('me')
   @UseGuards(JwtGuard)
