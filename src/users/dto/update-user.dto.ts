@@ -1,6 +1,6 @@
 import {
+  IsDate,
   IsEmail,
-  IsNotEmpty,
   IsOptional,
   IsString,
   IsUUID,
@@ -8,27 +8,37 @@ import {
   Length,
   MinLength,
 } from 'class-validator';
-
-import { User } from '../entities/users.entity';
 import { Exclude } from 'class-transformer';
 
-export class CreateUserDto {
+import { User } from '../entities/users.entity';
+
+export class UpdateUserDto {
   @Exclude()
   @IsOptional()
   @IsString()
   @IsUUID()
-  id: string;
+  id: User['id'];
 
-  @IsNotEmpty()
+  @Exclude()
+  @IsOptional()
+  @IsDate()
+  createdAt: User['createdAt'];
+
+  @Exclude()
+  @IsOptional()
+  @IsDate()
+  updatedAt: User['updatedAt'];
+
+  @IsOptional()
   @IsEmail()
   email: User['email'];
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(2)
   password: User['password'];
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @Length(2, 30)
   username: User['username'];

@@ -8,4 +8,5 @@ export const MESSAGE_ERROR = {
   BAD_REQUEST: 'Некорректно переданные данные',
 
   ID_BAD_REQUEST: 'Поле ID должно быть сгенерировано автоматически',
+  ID_UPDATE: 'Нельзя обновить поле ID',
 };

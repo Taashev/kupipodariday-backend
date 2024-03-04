@@ -4,6 +4,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { User } from './entities/users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 import { MESSAGE_ERROR } from 'src/utils/constants';
 
@@ -49,6 +50,21 @@ export class UsersRepository {
 
   async save(createUserDto: CreateUserDto): Promise<User> {
     const user = await this.userRepository.save(createUserDto);
+
+    return user;
+  }
+
+  async update(
+    userId: User['id'],
+    updateUserDto: UpdateUserDto,
+  ): Promise<User> {
+    if (updateUserDto.id) {
+      throw new BadRequestException(MESSAGE_ERROR.ID_UPDATE);
+    }
+
+    await this.userRepository.update(userId, updateUserDto);
+
+    const user = this.userRepository.findOneBy({ id: userId });
 
     return user;
   }

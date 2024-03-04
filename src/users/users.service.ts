@@ -6,6 +6,7 @@ import { SALT } from '../utils/constants';
 import { UsersRepository } from './users.repository';
 import { User } from './entities/users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -28,11 +29,32 @@ export class UsersService {
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const user = this.usersRepository.create(createUserDto);
 
-    const hashPassword = await bcrypt.hash(user.password, SALT);
+    const hashPassword = await this.hashPassword(user.password);
 
     user.password = hashPassword;
 
     return this.usersRepository.save(user);
+  }
+
+  async updateUser(
+    userId: User['id'],
+    updateUserDto: UpdateUserDto,
+  ): Promise<User> {
+    if (updateUserDto.password) {
+      const hashPassword = await this.hashPassword(updateUserDto.password);
+
+      updateUserDto.password = hashPassword;
+    }
+
+    const user = await this.usersRepository.update(userId, updateUserDto);
+
+    return user;
+  }
+
+  async hashPassword(password: User['password'], salt = SALT): Promise<string> {
+    const hashPassword = await bcrypt.hash(password, salt);
+
+    return hashPassword;
   }
 
   serializeUserResponseDto(ClassDto: any, user: User | User[]) {
