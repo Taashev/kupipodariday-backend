@@ -1,4 +1,5 @@
 import { Exclude } from 'class-transformer';
+
 import { User } from '../entities/users.entity';
 
 export class UserPublicProfileResponseDto extends User {

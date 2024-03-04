@@ -1,4 +1,5 @@
 import {
+  IsDate,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -18,6 +19,16 @@ export class CreateUserDto {
   @IsString()
   @IsUUID()
   id: string;
+
+  @Exclude()
+  @IsOptional()
+  @IsDate()
+  createdAt: User['createdAt'];
+
+  @Exclude()
+  @IsOptional()
+  @IsDate()
+  updatedAt: User['updatedAt'];
 
   @IsNotEmpty()
   @IsEmail()
