@@ -72,8 +72,6 @@ export class UsersController {
   async findUsers(
     @Body() findUsersDto: FindUsersDto,
   ): Promise<UserProfileResponseDto[]> {
-    console.log(findUsersDto);
-
     const users = await this.usersService.findUsers(findUsersDto);
 
     const usersPublicProfileResponseDto =

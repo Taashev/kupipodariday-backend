@@ -60,7 +60,7 @@ export class UsersRepository {
   async findUsers(findUsersDto: FindUsersDto): Promise<User[]> {
     const findUsersByEmail = await this.findMany('email', findUsersDto.query);
 
-    if (findUsersByEmail) {
+    if (findUsersByEmail.length !== 0) {
       return findUsersByEmail;
     }
 
@@ -69,7 +69,7 @@ export class UsersRepository {
       findUsersDto.query,
     );
 
-    if (findUsersByEmail) {
+    if (findUsersByUsername.length !== 0) {
       return findUsersByUsername;
     }
 
