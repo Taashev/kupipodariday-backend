@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Patch,
+  Post,
   Req,
   UseGuards,
   UseInterceptors,
@@ -16,6 +17,7 @@ import { User } from './entities/users.entity';
 import { UserPublicProfileResponseDto } from './dto/user-public-profile-response.dto';
 import { UserProfileResponseDto } from './dto/user-profile-response.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FindUsersDto } from './dto/find-users.dto';
 
 import { JwtGuard } from 'src/passport/guards/jwt.guard';
 
@@ -50,6 +52,36 @@ export class UsersController {
     return userProfileResponseDto;
   }
 
+  @Get(':username')
+  async findByUsername(
+    @Param('username') username: User['username'],
+  ): Promise<UserPublicProfileResponseDto> {
+    const user = await this.usersService.findByUsername(username);
+
+    const userPublicProfileResponseDto =
+      this.usersService.serializeUserResponseDto(
+        UserPublicProfileResponseDto,
+        user,
+      );
+
+    return userPublicProfileResponseDto;
+  }
+
+  @Post('find')
+  @UseGuards(JwtGuard)
+  async findUsers(
+    @Body() findUsersDto: FindUsersDto,
+  ): Promise<UserProfileResponseDto[]> {
+    console.log(findUsersDto);
+
+    const users = await this.usersService.findUsers(findUsersDto);
+
+    const usersPublicProfileResponseDto =
+      this.usersService.serializeUserResponseDto(UserProfileResponseDto, users);
+
+    return usersPublicProfileResponseDto;
+  }
+
   @Patch('me')
   @UseGuards(JwtGuard)
   async updateProfile(
@@ -69,20 +101,5 @@ export class UsersController {
     );
 
     return userProfileResponseDto;
-  }
-
-  @Get(':username')
-  async findByUsername(
-    @Param('username') username: User['username'],
-  ): Promise<UserPublicProfileResponseDto> {
-    const user = await this.usersService.findByUsername(username);
-
-    const userPublicProfileResponseDto =
-      this.usersService.serializeUserResponseDto(
-        UserPublicProfileResponseDto,
-        user,
-      );
-
-    return userPublicProfileResponseDto;
   }
 }

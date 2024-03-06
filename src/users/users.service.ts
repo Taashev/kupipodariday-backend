@@ -7,6 +7,7 @@ import { UsersRepository } from './users.repository';
 import { User } from './entities/users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FindUsersDto } from './dto/find-users.dto';
 
 @Injectable()
 export class UsersService {
@@ -17,13 +18,19 @@ export class UsersService {
   }
 
   async findById(id: User['id']): Promise<User> {
-    return await this.usersRepository.findById(id);
+    return await this.usersRepository.findOneById(id);
   }
 
   async findByUsername(username: User['username']): Promise<User> {
-    const user = await this.usersRepository.findByUsername(username);
+    const user = await this.usersRepository.findOneByUsername(username);
 
     return user;
+  }
+
+  async findUsers(findUsersDto: FindUsersDto): Promise<User[]> {
+    const users = this.usersRepository.findUsers(findUsersDto);
+
+    return users;
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
