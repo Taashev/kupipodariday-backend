@@ -78,8 +78,6 @@ export class UsersController {
     @Req() req: Request,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserProfileResponseDto> {
-    console.log(updateUserDto);
-
     const userRequest = req.user;
 
     const user = await this.usersService.updateUser(
