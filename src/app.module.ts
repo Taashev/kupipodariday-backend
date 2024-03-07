@@ -1,14 +1,14 @@
 import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { UsersModule } from './users/users.module';
-import { PassportModule } from './passport/passport.module';
+import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
-
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
+
+import { UsersModule } from './users/users.module';
+import { WishModule } from './wishes/wish.module';
+import { PassportModule } from './passport/passport.module';
 
 @Module({
   imports: [
@@ -26,8 +26,9 @@ import { ConfigModule } from '@nestjs/config';
       synchronize: false,
       uuidExtension: 'uuid-ossp',
     }),
-    UsersModule,
     PassportModule,
+    UsersModule,
+    WishModule,
   ],
   controllers: [AppController],
   providers: [AppService],

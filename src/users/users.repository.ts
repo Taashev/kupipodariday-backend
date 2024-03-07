@@ -2,12 +2,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BadRequestException, Injectable } from '@nestjs/common';
 
+import { MESSAGE_ERROR } from 'src/utils/constants';
+
 import { User } from './entities/users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindUsersDto } from './dto/find-users.dto';
-
-import { MESSAGE_ERROR } from 'src/utils/constants';
 
 @Injectable()
 export class UsersRepository {

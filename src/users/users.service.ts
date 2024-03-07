@@ -63,12 +63,4 @@ export class UsersService {
 
     return hashPassword;
   }
-
-  serializeUserResponseDto(ClassDto: any, user: User | User[]) {
-    if (Array.isArray(user)) {
-      return user.map((user) => new ClassDto(user));
-    } else {
-      return new ClassDto(user);
-    }
-  }
 }

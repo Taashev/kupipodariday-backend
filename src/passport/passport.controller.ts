@@ -11,15 +11,16 @@ import {
 import { PassportService } from './passport.service';
 import { Request, Response } from 'express';
 
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { UsersService } from 'src/users/users.service';
+import { SerializeUserResponseInterceptor } from 'src/users/interceptors/serialize-user-response.interceptor';
+
 import { LocalGuard } from './guards/local.guard';
 import { SignInUserResponseDto } from './dto/signin-user-response.dto';
 import { SignupUserResponseDto } from './dto/signup-user-response.dto';
 
-import { User } from 'src/users/entities/users.entity';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { UsersService } from 'src/users/users.service';
-
 @Controller()
+@UseInterceptors(ClassSerializerInterceptor)
 export class PassportController {
   constructor(
     private readonly passportService: PassportService,
@@ -27,23 +28,18 @@ export class PassportController {
   ) {}
 
   @Post('signup')
-  @UseInterceptors(ClassSerializerInterceptor)
+  @UseInterceptors(new SerializeUserResponseInterceptor(SignupUserResponseDto))
   async signup(
     @Res({ passthrough: true }) res: Response,
     @Body() createUserDto: CreateUserDto,
   ): Promise<SignupUserResponseDto> {
     const user = await this.usersService.createUser(createUserDto);
 
-    const signupUserResponseDto = this.usersService.serializeUserResponseDto(
-      SignupUserResponseDto,
-      user,
-    );
-
-    const jwt = await this.passportService.auth(signupUserResponseDto);
+    const jwt = await this.passportService.auth(user.id);
 
     res.cookie('access_token', jwt.access_token, { httpOnly: true });
 
-    return signupUserResponseDto;
+    return user;
   }
 
   @Post('signin')
@@ -52,9 +48,9 @@ export class PassportController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<SignInUserResponseDto> {
-    const user = req.user as User;
+    const user = req.user;
 
-    const jwt = await this.passportService.auth(user);
+    const jwt = await this.passportService.auth(user.id);
 
     res.cookie('access_token', jwt.access_token, { httpOnly: true });
 
