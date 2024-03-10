@@ -28,7 +28,9 @@ export class PassportController {
   ) {}
 
   @Post('signup')
-  @UseInterceptors(new SerializeUserResponseInterceptor(SignupUserResponseDto))
+  @UseInterceptors(
+    new SerializeUserResponseInterceptor('UserProfileResponseDto'),
+  )
   async signup(
     @Res({ passthrough: true }) res: Response,
     @Body() createUserDto: CreateUserDto,

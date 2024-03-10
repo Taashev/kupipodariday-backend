@@ -1,10 +1,22 @@
 import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
 import { Observable, map } from 'rxjs';
 
-import { User } from '../entities/users.entity';
+import { UserProfileResponseDto } from '../dto/user-profile-response.dto';
+import { UserPublicProfileResponseDto } from '../dto/user-public-profile-response.dto';
 
-export class SerializeUserResponseInterceptor<T> implements NestInterceptor {
-  constructor(private UserResponseDto: new (user: User) => T) {}
+type SerializeUserResponseInterceptorDtoParam =
+  | 'UserProfileResponseDto'
+  | 'UserPublicProfileResponseDto';
+
+const userResponseDto = {
+  UserProfileResponseDto,
+  UserPublicProfileResponseDto,
+};
+
+export class SerializeUserResponseInterceptor implements NestInterceptor {
+  UserResponseDto = userResponseDto[this.dto];
+
+  constructor(private dto: SerializeUserResponseInterceptorDtoParam) {}
 
   intercept(
     context: ExecutionContext,

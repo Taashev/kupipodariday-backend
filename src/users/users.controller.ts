@@ -29,7 +29,7 @@ export class UsersController {
 
   @Get()
   @UseInterceptors(
-    new SerializeUserResponseInterceptor(UserPublicProfileResponseDto),
+    new SerializeUserResponseInterceptor('UserPublicProfileResponseDto'),
   )
   async findAll(): Promise<UserPublicProfileResponseDto[]> {
     const users = await this.usersService.findAll();
@@ -39,18 +39,18 @@ export class UsersController {
 
   @Get('me')
   @UseGuards(JwtGuard)
-  @UseInterceptors(new SerializeUserResponseInterceptor(UserProfileResponseDto))
+  @UseInterceptors(
+    new SerializeUserResponseInterceptor('UserProfileResponseDto'),
+  )
   async getCurrentUser(@Req() req: Request): Promise<UserProfileResponseDto> {
     const requestUser = req.user;
-
-    requestUser.password = 'sadf';
 
     return requestUser;
   }
 
   @Get(':username')
   @UseInterceptors(
-    new SerializeUserResponseInterceptor(UserPublicProfileResponseDto),
+    new SerializeUserResponseInterceptor('UserPublicProfileResponseDto'),
   )
   async findByUsername(
     @Param('username') username: User['username'],
@@ -62,7 +62,9 @@ export class UsersController {
 
   @Post('find')
   @UseGuards(JwtGuard)
-  @UseInterceptors(new SerializeUserResponseInterceptor(UserProfileResponseDto))
+  @UseInterceptors(
+    new SerializeUserResponseInterceptor('UserProfileResponseDto'),
+  )
   async findUsers(
     @Body() findUsersDto: FindUsersDto,
   ): Promise<UserProfileResponseDto[]> {
@@ -73,7 +75,9 @@ export class UsersController {
 
   @Patch('me')
   @UseGuards(JwtGuard)
-  @UseInterceptors(new SerializeUserResponseInterceptor(UserProfileResponseDto))
+  @UseInterceptors(
+    new SerializeUserResponseInterceptor('UserProfileResponseDto'),
+  )
   async updateProfile(
     @Req() req: Request,
     @Body() updateUserDto: UpdateUserDto,
