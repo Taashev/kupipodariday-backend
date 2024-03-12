@@ -1,8 +1,13 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { MESSAGE_ERROR } from 'src/utils/constants';
+import { TypeOrmException } from 'src/exceptions/typeorm.exception';
 
 import { User } from './entities/users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -87,9 +92,13 @@ export class UsersRepository {
   }
 
   async save(createUserDto: CreateUserDto): Promise<User> {
-    const user = await this.userRepository.save(createUserDto);
+    try {
+      const user = await this.userRepository.save(createUserDto);
 
-    return user;
+      return user;
+    } catch (error) {
+      throw new TypeOrmException(error);
+    }
   }
 
   async update(
@@ -100,9 +109,17 @@ export class UsersRepository {
       throw new BadRequestException(MESSAGE_ERROR.ID_UPDATE);
     }
 
-    await this.userRepository.update(userId, updateUserDto);
+    try {
+      await this.userRepository.update(userId, updateUserDto);
+    } catch (error) {
+      throw new TypeOrmException(error);
+    }
 
-    const user = this.findOneById(userId);
+    const user = await this.findOneById(userId);
+
+    if (!user) {
+      throw new NotFoundException(MESSAGE_ERROR.USER_NOT_FOUND);
+    }
 
     return user;
   }
