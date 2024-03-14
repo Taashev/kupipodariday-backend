@@ -33,10 +33,16 @@ export class Wish {
   @Column({ nullable: false })
   image: string;
 
-  @Column({ type: 'decimal', nullable: false })
+  @Column({ type: 'decimal', precision: 20, scale: 2, nullable: false })
   price: number;
 
-  @Column({ type: 'decimal', default: 0, nullable: false })
+  @Column({
+    type: 'decimal',
+    precision: 20,
+    scale: 2,
+    default: 0,
+    nullable: false,
+  })
   raised: number;
 
   @Column({ length: 1024, nullable: false })

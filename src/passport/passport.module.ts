@@ -22,6 +22,6 @@ import { LocalStrategy } from './strategy/local-strategy';
     }),
   ],
   controllers: [PassportController],
-  providers: [PassportService, JwtStrategy, LocalStrategy],
+  providers: [PassportService, JwtStrategy, LocalStrategy, UsersModule],
 })
 export class PassportModule {}

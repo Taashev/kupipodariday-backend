@@ -23,8 +23,12 @@ export class UsersRepository {
   async findOne(
     key: 'username' | 'id',
     query: User['username'] | User['id'],
+    options: { wishes: boolean } = { wishes: false },
   ): Promise<User> {
-    const user = await this.userRepository.findOneBy({ [key]: query });
+    const user = await this.userRepository.findOne({
+      where: { [key]: query },
+      relations: { wishes: options.wishes },
+    });
 
     return user;
   }
@@ -42,12 +46,15 @@ export class UsersRepository {
     return await this.userRepository.find();
   }
 
-  async findOneById(id: User['id']): Promise<User> {
+  async findOneById(
+    id: User['id'],
+    options: { wishes: boolean } = { wishes: false },
+  ): Promise<User> {
     if (!id) {
       throw new BadRequestException(MESSAGE_ERROR.BAD_REQUEST);
     }
 
-    const user = await this.findOne('id', id);
+    const user = await this.findOne('id', id, options);
 
     return user;
   }

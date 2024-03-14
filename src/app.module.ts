@@ -7,7 +7,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { UsersModule } from './users/users.module';
-import { WishModule } from './wishes/wish.module';
+import { WishesModule } from './wishes/wishes.module';
 import { PassportModule } from './passport/passport.module';
 
 @Module({
@@ -28,7 +28,7 @@ import { PassportModule } from './passport/passport.module';
     }),
     PassportModule,
     UsersModule,
-    WishModule,
+    WishesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

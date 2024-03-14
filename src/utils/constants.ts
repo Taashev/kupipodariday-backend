@@ -11,6 +11,8 @@ export const MESSAGE_ERROR = {
 
   USER_NOT_FOUND: 'Пользователь не найден',
 
+  WISH_NOT_FOUND: 'Подарок не найден',
+
   ID_BAD_REQUEST: 'Поле ID должно быть сгенерировано автоматически',
 
   ID_UPDATE: 'Нельзя обновить поле ID',

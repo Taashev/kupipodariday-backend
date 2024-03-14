@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsDate,
   IsEmail,
   IsNotEmpty,
@@ -8,11 +9,13 @@ import {
   IsUrl,
   Length,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 import { User } from '../entities/users.entity';
 
-export class UserDto {
+export class UserDto implements User {
   @IsNotEmpty()
   @IsString()
   @IsUUID()
@@ -49,4 +52,10 @@ export class UserDto {
   @IsString()
   @Length(2, 200)
   about: User['about'];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested()
+  @Type(() => User['wishes'])
+  wishes: User['wishes'];
 }

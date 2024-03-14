@@ -13,7 +13,8 @@ import { Request, Response } from 'express';
 
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
-import { SerializeUserResponseInterceptor } from 'src/users/interceptors/serialize-user-response.interceptor';
+
+import { UsersSerializeService } from 'src/users/users-serialize.service';
 
 import { LocalGuard } from './guards/local.guard';
 import { SignInUserResponseDto } from './dto/signin-user-response.dto';
@@ -25,12 +26,10 @@ export class PassportController {
   constructor(
     private readonly passportService: PassportService,
     private readonly usersService: UsersService,
+    private readonly usersSerializeService: UsersSerializeService,
   ) {}
 
   @Post('signup')
-  @UseInterceptors(
-    new SerializeUserResponseInterceptor('UserProfileResponseDto'),
-  )
   async signup(
     @Res({ passthrough: true }) res: Response,
     @Body() createUserDto: CreateUserDto,
@@ -41,7 +40,12 @@ export class PassportController {
 
     res.cookie('access_token', jwt.access_token, { httpOnly: true });
 
-    return user;
+    const userResponseDto = this.usersSerializeService.serialize(
+      'UserProfileResponseDto',
+      user,
+    );
+
+    return userResponseDto;
   }
 
   @Post('signin')

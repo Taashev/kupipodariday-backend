@@ -35,6 +35,6 @@ export class User {
   @Column({ default: 'https://i.pravatar.cc/300' })
   avatar: string;
 
-  @OneToMany(() => Wish, (wish) => wish.owner)
+  @OneToMany(() => Wish, (wish) => wish.owner, { onDelete: 'CASCADE' })
   wishes: Wish[];
 }
