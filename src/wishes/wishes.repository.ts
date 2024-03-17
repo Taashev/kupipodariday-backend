@@ -7,6 +7,7 @@ import { MESSAGE_ERROR } from 'src/utils/constants';
 import { Wish } from './entities/wish.entity';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { TypeOrmException } from 'src/exceptions/typeorm.exception';
+import { UpdateWishDto } from './dto/update-wish.dto';
 
 @Injectable()
 export class WishesRepository {
@@ -24,7 +25,7 @@ export class WishesRepository {
     });
 
     if (!wish) {
-      throw new NotFoundException(MESSAGE_ERROR.WISH_NOT_FOUND);
+      throw new NotFoundException(MESSAGE_ERROR.NOT_FOUND_WISH);
     }
 
     return wish;
@@ -41,6 +42,14 @@ export class WishesRepository {
       const wish = this.wishRepository.save(createWish);
 
       return wish;
+    } catch (error) {
+      throw new TypeOrmException(error);
+    }
+  }
+
+  async updateById(wishId: string, updateWish: UpdateWishDto) {
+    try {
+      await this.wishRepository.update({ id: wishId }, updateWish);
     } catch (error) {
       throw new TypeOrmException(error);
     }

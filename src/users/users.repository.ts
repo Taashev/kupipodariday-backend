@@ -1,10 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { MESSAGE_ERROR } from 'src/utils/constants';
 import { TypeOrmException } from 'src/exceptions/typeorm.exception';
@@ -90,7 +86,7 @@ export class UsersRepository {
 
   create(createUserDto: CreateUserDto): User {
     if (createUserDto.id) {
-      throw new BadRequestException(MESSAGE_ERROR.ID_BAD_REQUEST);
+      throw new BadRequestException(MESSAGE_ERROR.BAD_REQUEST_ID);
     }
 
     const user = this.userRepository.create(createUserDto);
@@ -111,9 +107,9 @@ export class UsersRepository {
   async update(
     userId: User['id'],
     updateUserDto: UpdateUserDto,
-  ): Promise<User> {
+  ): Promise<void> {
     if (updateUserDto.id) {
-      throw new BadRequestException(MESSAGE_ERROR.ID_UPDATE);
+      throw new BadRequestException(MESSAGE_ERROR.BAD_REQUEST_UPDATE_ID);
     }
 
     try {
@@ -121,13 +117,5 @@ export class UsersRepository {
     } catch (error) {
       throw new TypeOrmException(error);
     }
-
-    const user = await this.findOneById(userId);
-
-    if (!user) {
-      throw new NotFoundException(MESSAGE_ERROR.USER_NOT_FOUND);
-    }
-
-    return user;
   }
 }

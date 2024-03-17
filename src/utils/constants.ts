@@ -1,21 +1,23 @@
 export const SALT = 10;
 
 export const MESSAGE_ERROR = {
-  INTERVAL_SERVER_ERROR: 'Внутренняя ошибка сервера',
+  INTERNAL_SERVER_ERROR: 'Внутренняя ошибка сервера',
 
   AUTH_USER: 'Неверный логин или пароль',
 
   FORBIDDEN: 'У вас не хватает прав. Автороризуйтесь',
 
+  FORBIDDEN_UPDATE_WISH: 'Нельзя редактировать чужой подарок',
+
   BAD_REQUEST: 'Некорректно переданные данные',
 
-  USER_NOT_FOUND: 'Пользователь не найден',
+  BAD_REQUEST_ID: 'Поле ID должно быть сгенерировано автоматически',
 
-  WISH_NOT_FOUND: 'Подарок не найден',
+  BAD_REQUEST_UPDATE_ID: 'Нельзя обновить поле ID',
 
-  ID_BAD_REQUEST: 'Поле ID должно быть сгенерировано автоматически',
+  NOT_FOUND_USER: 'Пользователь не найден',
 
-  ID_UPDATE: 'Нельзя обновить поле ID',
+  NOT_FOUND_WISH: 'Подарок не найден',
 
-  USER_ALREADY_EXISTS: 'Пользователь уже существует',
+  ALREADY_EXISTS_USER: 'Пользователь уже существует',
 };

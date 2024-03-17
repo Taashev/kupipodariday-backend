@@ -5,6 +5,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Req,
   UseGuards,
@@ -16,6 +17,7 @@ import { JwtGuard } from 'src/passport/guards/jwt.guard';
 import { WishesService } from './wishes.service';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UsersSerializeService } from 'src/users/users-serialize.service';
+import { UpdateWishDto } from './dto/update-wish.dto';
 
 @Controller('wishes')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -47,6 +49,20 @@ export class WishesController {
     const user = req.user;
 
     await this.wishService.createWish(createWishDto, user);
+
+    return {};
+  }
+
+  @Patch(':id')
+  @UseGuards(JwtGuard)
+  async updateWish(
+    @Req() req: Request,
+    @Param('id') wishId: string,
+    @Body() updateWish: UpdateWishDto,
+  ): Promise<object> {
+    const user = req.user;
+
+    await this.wishService.updateById(wishId, user, updateWish);
 
     return {};
   }

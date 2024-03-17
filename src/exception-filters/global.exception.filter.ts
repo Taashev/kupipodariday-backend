@@ -13,7 +13,7 @@ import { MESSAGE_ERROR } from 'src/utils/constants';
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
   private statusCode: number = HttpStatus.INTERNAL_SERVER_ERROR;
-  private message: string = MESSAGE_ERROR.INTERVAL_SERVER_ERROR;
+  private message: string = MESSAGE_ERROR.INTERNAL_SERVER_ERROR;
 
   catch(exception: any, host: ArgumentsHost) {
     const http = host.switchToHttp();

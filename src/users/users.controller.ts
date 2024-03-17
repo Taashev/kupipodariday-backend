@@ -106,7 +106,7 @@ export class UsersController {
   ): Promise<UserProfileResponseDto> {
     const userRequest = req.user;
 
-    const user = await this.usersService.updateUser(
+    const user = await this.usersService.updateById(
       userRequest.id,
       updateUserDto,
     );

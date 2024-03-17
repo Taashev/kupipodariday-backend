@@ -46,7 +46,7 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async updateUser(
+  async updateById(
     userId: User['id'],
     updateUserDto: UpdateUserDto,
   ): Promise<User> {
@@ -56,7 +56,9 @@ export class UsersService {
       updateUserDto.password = hashPassword;
     }
 
-    const user = await this.usersRepository.update(userId, updateUserDto);
+    await this.usersRepository.update(userId, updateUserDto);
+
+    const user = await this.usersRepository.findOneById(userId);
 
     return user;
   }

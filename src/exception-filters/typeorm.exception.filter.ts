@@ -44,7 +44,7 @@ export class TypeOrmExceptionFilter implements ExceptionFilter {
       this.statusCode = HttpStatus.CONFLICT;
 
       this.message =
-        MESSAGE_ERROR.USER_ALREADY_EXISTS +
+        MESSAGE_ERROR.ALREADY_EXISTS_USER +
         `. Поле, вызвавшее конфликт: ${driverError.detail}`;
     } else {
       this.message = driverError.detail;
