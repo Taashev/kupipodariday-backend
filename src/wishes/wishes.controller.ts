@@ -93,7 +93,8 @@ export class WishesController {
 
     await this.wishService.deleteWish(wishId);
 
-    wish.owner = this.usersSerializeService.UserPublicProfileResponseDto(
+    wish.owner = this.usersSerializeService.serialize(
+      'UserPublicProfileResponseDto',
       wish.owner,
     );
 

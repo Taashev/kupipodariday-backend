@@ -29,11 +29,11 @@ export class UsersSerializeService {
     }
   }
 
-  public UserProfileResponseDto(user: User): UserProfileResponseDto {
+  private UserProfileResponseDto(user: User): UserProfileResponseDto {
     return new this.UserProfile(user);
   }
 
-  public UserPublicProfileResponseDto(
+  private UserPublicProfileResponseDto(
     user: User,
   ): UserPublicProfileResponseDto {
     return new this.UserPublicProfile(user);
