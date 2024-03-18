@@ -15,6 +15,8 @@ export const MESSAGE_ERROR = {
 
   BAD_REQUEST_UPDATE_ID: 'Нельзя обновить поле ID',
 
+  BAD_REQUEST_DELETE_WISH: 'Не удалось удалить подарок',
+
   NOT_FOUND_USER: 'Пользователь не найден',
 
   NOT_FOUND_WISH: 'Подарок не найден',

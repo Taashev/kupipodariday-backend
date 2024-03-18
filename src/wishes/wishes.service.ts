@@ -1,4 +1,9 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { WishesRepository } from './wishes.repository';
 
 import { User } from 'src/users/entities/users.entity';
@@ -13,10 +18,14 @@ export class WishesService {
   constructor(private readonly wishRepository: WishesRepository) {}
 
   async findById(
-    id: string,
+    wishId: Wish['id'],
     options: { owner: boolean } = { owner: false },
   ): Promise<Wish> {
-    const wish = await this.wishRepository.findById(id, options);
+    const wish = await this.wishRepository.findById(wishId, options);
+
+    if (!wish) {
+      throw new NotFoundException(MESSAGE_ERROR.NOT_FOUND_WISH);
+    }
 
     return wish;
   }
@@ -32,11 +41,15 @@ export class WishesService {
   }
 
   async updateById(
-    wishId: string,
+    wishId: Wish['id'],
     user: User,
     updateWish: UpdateWishDto,
   ): Promise<void> {
     const wish = await this.wishRepository.findById(wishId, { owner: true });
+
+    if (!wish) {
+      throw new NotFoundException(MESSAGE_ERROR.NOT_FOUND_WISH);
+    }
 
     const wishOwner = wish.owner;
 
@@ -45,5 +58,27 @@ export class WishesService {
     }
 
     await this.wishRepository.updateById(wishId, updateWish);
+  }
+
+  async deleteWish(wishId: Wish['id'], user: User): Promise<Wish> {
+    const wish = await this.wishRepository.findById(wishId, { owner: true });
+
+    if (!wish) {
+      throw new NotFoundException(MESSAGE_ERROR.NOT_FOUND_WISH);
+    }
+
+    const wishOwner = wish.owner;
+
+    if (user.id !== wishOwner.id) {
+      throw new ForbiddenException(MESSAGE_ERROR.FORBIDDEN_UPDATE_WISH);
+    }
+
+    const deleteWish = await this.wishRepository.deleteById(wishId);
+
+    if (!deleteWish?.affected) {
+      throw new BadRequestException(MESSAGE_ERROR.BAD_REQUEST_DELETE_WISH);
+    }
+
+    return wish;
   }
 }
