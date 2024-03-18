@@ -19,9 +19,9 @@ export class TypeOrmExceptionFilter implements ExceptionFilter {
     const http = host.switchToHttp();
     const httpResponse = http.getResponse();
 
-    const exceptionResponse = exception.getResponse();
-
     this.statusCode = exception.getStatus();
+
+    const exceptionResponse = exception.getResponse();
 
     if (exceptionResponse instanceof QueryFailedError) {
       this.handlerQueryFailedError(exceptionResponse);
@@ -47,7 +47,7 @@ export class TypeOrmExceptionFilter implements ExceptionFilter {
         MESSAGE_ERROR.ALREADY_EXISTS_USER +
         `. Поле, вызвавшее конфликт: ${driverError.detail}`;
     } else {
-      this.message = driverError.detail;
+      this.message = MESSAGE_ERROR.BAD_REQUEST;
     }
   }
 }

@@ -14,7 +14,7 @@ export class WishesRepository {
   ) {}
 
   async findById(
-    id: string,
+    id: Wish['id'],
     options: { owner: boolean } = { owner: false },
   ): Promise<Wish> {
     try {
@@ -45,7 +45,10 @@ export class WishesRepository {
     }
   }
 
-  async updateById(wishId: string, updateWish: UpdateWishDto): Promise<void> {
+  async updateById(
+    wishId: Wish['id'],
+    updateWish: UpdateWishDto,
+  ): Promise<void> {
     try {
       await this.wishRepository.update({ id: wishId }, updateWish);
     } catch (error) {
@@ -53,7 +56,7 @@ export class WishesRepository {
     }
   }
 
-  async deleteById(wishId: string): Promise<DeleteResult> {
+  async deleteById(wishId: Wish['id']): Promise<DeleteResult> {
     try {
       return await this.wishRepository.delete({ id: wishId });
     } catch (error) {

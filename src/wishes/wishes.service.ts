@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -12,6 +11,7 @@ import { Wish } from './entities/wish.entity';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
 import { MESSAGE_ERROR } from 'src/utils/constants';
+import { DeleteResult } from 'typeorm';
 
 @Injectable()
 export class WishesService {
@@ -42,42 +42,30 @@ export class WishesService {
 
   async updateById(
     wishId: Wish['id'],
-    user: User,
     updateWish: UpdateWishDto,
   ): Promise<void> {
-    const wish = await this.wishRepository.findById(wishId, { owner: true });
-
-    if (!wish) {
-      throw new NotFoundException(MESSAGE_ERROR.NOT_FOUND_WISH);
-    }
-
-    const wishOwner = wish.owner;
-
-    if (user.id !== wishOwner.id) {
-      throw new ForbiddenException(MESSAGE_ERROR.FORBIDDEN_UPDATE_WISH);
-    }
-
     await this.wishRepository.updateById(wishId, updateWish);
   }
 
-  async deleteWish(wishId: Wish['id'], user: User): Promise<Wish> {
-    const wish = await this.wishRepository.findById(wishId, { owner: true });
+  async deleteWish(wishId: Wish['id']): Promise<DeleteResult> {
+    const deleteResult = await this.wishRepository.deleteById(wishId);
 
-    if (!wish) {
-      throw new NotFoundException(MESSAGE_ERROR.NOT_FOUND_WISH);
-    }
+    const isDelete = deleteResult?.affected ? true : false;
 
-    const wishOwner = wish.owner;
-
-    if (user.id !== wishOwner.id) {
-      throw new ForbiddenException(MESSAGE_ERROR.FORBIDDEN_UPDATE_WISH);
-    }
-
-    const deleteWish = await this.wishRepository.deleteById(wishId);
-
-    if (!deleteWish?.affected) {
+    if (!isDelete) {
       throw new BadRequestException(MESSAGE_ERROR.BAD_REQUEST_DELETE_WISH);
     }
+
+    return deleteResult;
+  }
+
+  async serializeCreateWishDto(wish: Wish): Promise<CreateWishDto> {
+    delete wish.id;
+    delete wish.createdAt;
+    delete wish.updatedAt;
+    delete wish.owner;
+    delete wish.raised;
+    delete wish.copied;
 
     return wish;
   }

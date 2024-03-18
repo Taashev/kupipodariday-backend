@@ -20,6 +20,7 @@ import { Wish } from './entities/wish.entity';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UsersSerializeService } from 'src/users/users-serialize.service';
 import { UpdateWishDto } from './dto/update-wish.dto';
+import { IsWishOwnerInterceptor } from './interceptors/is-wish-owner.interceptor';
 
 @Controller('wishes')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -55,34 +56,47 @@ export class WishesController {
     return {};
   }
 
-  @Patch(':id')
+  @Post(':id/copy')
   @UseGuards(JwtGuard)
-  async updateWish(
+  async copyWish(
     @Req() req: Request,
     @Param('id') wishId: Wish['id'],
-    @Body() updateWish: UpdateWishDto,
   ): Promise<object> {
     const user = req.user;
 
-    await this.wishService.updateById(wishId, user, updateWish);
+    const wish = await this.findById(wishId);
+
+    const createWishDto = await this.wishService.serializeCreateWishDto(wish);
+
+    await this.wishService.createWish(createWishDto, user);
+
+    return {};
+  }
+
+  @Patch(':id')
+  @UseGuards(JwtGuard)
+  @UseInterceptors(IsWishOwnerInterceptor)
+  async updateWish(
+    @Param('id') wishId: Wish['id'],
+    @Body() updateWish: UpdateWishDto,
+  ): Promise<object> {
+    await this.wishService.updateById(wishId, updateWish);
 
     return {};
   }
 
   @Delete(':id')
   @UseGuards(JwtGuard)
-  async deleteWish(
-    @Req() req: Request,
-    @Param('id') wishId: Wish['id'],
-  ): Promise<Wish> {
-    const user = req.user;
+  @UseInterceptors(IsWishOwnerInterceptor)
+  async deleteWish(@Param('id') wishId: Wish['id']): Promise<Wish> {
+    const wish = await this.wishService.findById(wishId, { owner: true });
 
-    const deleteWish = await this.wishService.deleteWish(wishId, user);
+    await this.wishService.deleteWish(wishId);
 
-    deleteWish.owner = this.usersSerializeService.UserPublicProfileResponseDto(
-      deleteWish.owner,
+    wish.owner = this.usersSerializeService.UserPublicProfileResponseDto(
+      wish.owner,
     );
 
-    return deleteWish;
+    return wish;
   }
 }

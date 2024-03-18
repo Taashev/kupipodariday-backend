@@ -7,7 +7,7 @@ export const MESSAGE_ERROR = {
 
   FORBIDDEN: 'У вас не хватает прав. Автороризуйтесь',
 
-  FORBIDDEN_UPDATE_WISH: 'Нельзя редактировать чужой подарок',
+  FORBIDDEN_WISH: 'Вы не являетесь владельцем этого подарка',
 
   BAD_REQUEST: 'Некорректно переданные данные',
 
