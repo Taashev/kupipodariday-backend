@@ -3,12 +3,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { User } from 'src/users/entities/users.entity';
+import { Offer } from 'src/offers/entities/offer.entity';
 
 @Entity({ name: 'wishes' })
 @Check('"price" >= 1')
@@ -51,6 +54,12 @@ export class Wish {
   @Column({ default: 0, nullable: false })
   copied: number;
 
-  @ManyToOne(() => User, (user) => user.wishes, { nullable: false })
+  @ManyToOne(() => User, (user) => user.wishes, {
+    nullable: false,
+  })
+  @JoinColumn()
   owner: User;
+
+  @OneToMany(() => Offer, (offer) => offer.item)
+  offers: Offer[];
 }

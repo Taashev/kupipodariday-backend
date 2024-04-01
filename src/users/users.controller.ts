@@ -15,13 +15,13 @@ import {
 import { JwtGuard } from 'src/passport/guards/jwt.guard';
 
 import { UsersService } from './users.service';
-import { UsersSerializeService } from './users-serialize.service';
 
-import { User } from './entities/users.entity';
 import { UserPublicProfileResponseDto } from './dto/user-public-profile-response.dto';
 import { UserProfileResponseDto } from './dto/user-profile-response.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindUsersDto } from './dto/find-users.dto';
+import { UserDto } from './dto/user.dto';
+import { UsersSerializeService } from './users-serialize.service';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -35,12 +35,12 @@ export class UsersController {
   async findAll(): Promise<UserPublicProfileResponseDto[]> {
     const users = await this.usersService.findAll();
 
-    const usersResponseDto = users.map((user) =>
-      this.usersSerializeService.serialize(
+    const usersResponseDto = users.map((user) => {
+      return this.usersSerializeService.serialize(
         'UserPublicProfileResponseDto',
         user,
-      ),
-    );
+      );
+    });
 
     return usersResponseDto;
   }
@@ -60,7 +60,7 @@ export class UsersController {
 
   @Get(':username')
   async findByUsername(
-    @Param('username') username: User['username'],
+    @Param('username') username: UserDto['username'],
   ): Promise<UserPublicProfileResponseDto> {
     const user = await this.usersService.findByUsername(username);
 
@@ -74,7 +74,7 @@ export class UsersController {
 
   @Get('me/wishes')
   @UseGuards(JwtGuard)
-  async getUserMeWishes(@Req() req: Request): Promise<User['wishes']> {
+  async getUserMeWishes(@Req() req: Request): Promise<UserDto['wishes']> {
     const user = await this.usersService.findById(req.user.id, {
       wishes: true,
     });
@@ -91,11 +91,14 @@ export class UsersController {
   ): Promise<UserProfileResponseDto[]> {
     const users = await this.usersService.findUsers(findUsersDto);
 
-    const userResponseDto = users.map((user) =>
-      this.usersSerializeService.serialize('UserProfileResponseDto', user),
-    );
+    const usersResponseDto = users.map((user) => {
+      return this.usersSerializeService.serialize(
+        'UserProfileResponseDto',
+        user,
+      );
+    });
 
-    return userResponseDto;
+    return usersResponseDto;
   }
 
   @Patch('me')

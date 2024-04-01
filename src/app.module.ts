@@ -9,6 +9,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { WishesModule } from './wishes/wishes.module';
 import { PassportModule } from './passport/passport.module';
+import { OffersModule } from './offers/offers.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { PassportModule } from './passport/passport.module';
     PassportModule,
     UsersModule,
     WishesModule,
+    OffersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

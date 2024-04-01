@@ -1,18 +1,13 @@
 import { Exclude } from 'class-transformer';
-import { OmitType } from '@nestjs/mapped-types';
 
-import { User } from '../entities/users.entity';
 import { UserDto } from './user.dto';
 
-export class UserPublicProfileResponseDto extends OmitType(UserDto, [
-  'email',
-  'password',
-]) {
+export class UserPublicProfileResponseDto extends UserDto {
   @Exclude()
-  email: User['email'];
+  email: UserDto['email'];
 
   @Exclude()
-  password: User['password'];
+  password: UserDto['password'];
 
   constructor(partial: Partial<UserPublicProfileResponseDto>) {
     super();

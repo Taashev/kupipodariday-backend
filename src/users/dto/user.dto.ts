@@ -1,6 +1,5 @@
 import {
   IsArray,
-  IsDate,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -11,51 +10,51 @@ import {
   MinLength,
   ValidateNested,
 } from 'class-validator';
+
 import { Type } from 'class-transformer';
 
-import { User } from '../entities/users.entity';
+import { WishDto } from 'src/wishes/dto/wish.dto';
+// import { OfferDto } from 'src/offers/dto/offer.dto';
 
-export class UserDto implements User {
+export class UserDto {
   @IsNotEmpty()
   @IsString()
   @IsUUID()
   id: string;
 
   @IsNotEmpty()
-  @IsDate()
-  createdAt: User['createdAt'];
-
-  @IsNotEmpty()
-  @IsDate()
-  updatedAt: User['updatedAt'];
-
-  @IsNotEmpty()
   @IsEmail()
-  email: User['email'];
+  email: string;
 
   @IsNotEmpty()
   @IsString()
   @MinLength(2)
-  password: User['password'];
+  password: string;
 
   @IsNotEmpty()
   @IsString()
   @Length(2, 30)
-  username: User['username'];
+  username: string;
 
   @IsOptional()
   @IsString()
   @IsUrl()
-  avatar: User['avatar'];
+  avatar: string;
 
   @IsOptional()
   @IsString()
   @Length(2, 200)
-  about: User['about'];
+  about: string;
 
   @IsOptional()
   @IsArray()
   @ValidateNested()
-  @Type(() => User['wishes'])
-  wishes: User['wishes'];
+  @Type(() => WishDto)
+  wishes: WishDto[];
+
+  // @IsOptional()
+  // @IsArray()
+  // @ValidateNested()
+  // @Type(() => OfferDto)
+  // offers: OfferDto;
 }

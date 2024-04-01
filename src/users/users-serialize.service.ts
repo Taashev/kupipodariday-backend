@@ -1,41 +1,32 @@
 import { Injectable } from '@nestjs/common';
+import { ClassTransformOptions, plainToInstance } from 'class-transformer';
 
 import { User } from './entities/users.entity';
 
 import { UserProfileResponseDto } from './dto/user-profile-response.dto';
 import { UserPublicProfileResponseDto } from './dto/user-public-profile-response.dto';
+import { UserDto } from './dto/user.dto';
 
-type SerializeDto = 'UserProfileResponseDto' | 'UserPublicProfileResponseDto';
+type DtoProp = 'UserProfileResponseDto' | 'UserPublicProfileResponseDto';
 
-export type SerializeResponse =
-  | UserProfileResponseDto
-  | UserPublicProfileResponseDto;
+type UserProp = User | UserDto;
 
 @Injectable()
 export class UsersSerializeService {
-  private UserProfile = UserProfileResponseDto;
-  private UserPublicProfile = UserPublicProfileResponseDto;
-
-  public serialize(dto: SerializeDto, user: User): SerializeResponse {
+  public serialize(
+    dto: DtoProp,
+    user: UserProp,
+    options: ClassTransformOptions = { excludeExtraneousValues: false },
+  ) {
     switch (dto) {
       case 'UserProfileResponseDto':
-        return this.UserProfileResponseDto(user);
+        return plainToInstance(UserProfileResponseDto, user, options);
       case 'UserPublicProfileResponseDto':
-        return this.UserPublicProfileResponseDto(user);
+        return plainToInstance(UserPublicProfileResponseDto, user, options);
       default:
         delete user.email;
         delete user.password;
         return user;
     }
-  }
-
-  private UserProfileResponseDto(user: User): UserProfileResponseDto {
-    return new this.UserProfile(user);
-  }
-
-  private UserPublicProfileResponseDto(
-    user: User,
-  ): UserPublicProfileResponseDto {
-    return new this.UserPublicProfile(user);
   }
 }

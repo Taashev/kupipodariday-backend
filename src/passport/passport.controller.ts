@@ -10,11 +10,11 @@ import {
 } from '@nestjs/common';
 import { PassportService } from './passport.service';
 import { Request, Response } from 'express';
+import { plainToInstance } from 'class-transformer';
 
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
-
-import { UsersSerializeService } from 'src/users/users-serialize.service';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { UserProfileResponseDto } from 'src/users/dto/user-profile-response.dto';
 
 import { LocalGuard } from './guards/local.guard';
 import { SignInUserResponseDto } from './dto/signin-user-response.dto';
@@ -26,7 +26,6 @@ export class PassportController {
   constructor(
     private readonly passportService: PassportService,
     private readonly usersService: UsersService,
-    private readonly usersSerializeService: UsersSerializeService,
   ) {}
 
   @Post('signup')
@@ -40,10 +39,7 @@ export class PassportController {
 
     res.cookie('access_token', jwt.access_token, { httpOnly: true });
 
-    const userResponseDto = this.usersSerializeService.serialize(
-      'UserProfileResponseDto',
-      user,
-    );
+    const userResponseDto = plainToInstance(UserProfileResponseDto, user);
 
     return userResponseDto;
   }

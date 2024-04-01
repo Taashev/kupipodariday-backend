@@ -6,9 +6,11 @@ import { MESSAGE_ERROR } from 'src/utils/constants';
 import { TypeOrmException } from 'src/exceptions/typeorm.exception';
 
 import { User } from './entities/users.entity';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindUsersDto } from './dto/find-users.dto';
+import { UserDto } from './dto/user.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -18,7 +20,7 @@ export class UsersRepository {
 
   async findOne(
     key: 'username' | 'id',
-    query: User['username'] | User['id'],
+    query: UserDto['username'] | UserDto['id'],
     options: { wishes: boolean } = { wishes: false },
   ): Promise<User> {
     const user = await this.userRepository.findOne({
@@ -43,7 +45,7 @@ export class UsersRepository {
   }
 
   async findOneById(
-    id: User['id'],
+    id: UserDto['id'],
     options: { wishes: boolean } = { wishes: false },
   ): Promise<User> {
     if (!id) {
@@ -55,7 +57,7 @@ export class UsersRepository {
     return user;
   }
 
-  async findOneByUsername(username: User['username']): Promise<User> {
+  async findOneByUsername(username: UserDto['username']): Promise<User> {
     if (!username) {
       throw new BadRequestException(MESSAGE_ERROR.BAD_REQUEST);
     }
@@ -85,10 +87,6 @@ export class UsersRepository {
   }
 
   create(createUserDto: CreateUserDto): User {
-    if (createUserDto.id) {
-      throw new BadRequestException(MESSAGE_ERROR.BAD_REQUEST_ID);
-    }
-
     const user = this.userRepository.create(createUserDto);
 
     return user;
@@ -105,13 +103,9 @@ export class UsersRepository {
   }
 
   async update(
-    userId: User['id'],
+    userId: UserDto['id'],
     updateUserDto: UpdateUserDto,
   ): Promise<void> {
-    if (updateUserDto.id) {
-      throw new BadRequestException(MESSAGE_ERROR.BAD_REQUEST_UPDATE_ID);
-    }
-
     try {
       await this.userRepository.update(userId, updateUserDto);
     } catch (error) {

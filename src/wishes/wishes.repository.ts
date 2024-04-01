@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 
-import { Wish } from './entities/wish.entity';
-import { CreateWishDto } from './dto/create-wish.dto';
+import { User } from 'src/users/entities/users.entity';
 import { TypeOrmException } from 'src/exceptions/typeorm.exception';
+
+import { Wish } from './entities/wish.entity';
+
+import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
+import { WishDto } from './dto/wish.dto';
 
 @Injectable()
 export class WishesRepository {
@@ -14,7 +18,7 @@ export class WishesRepository {
   ) {}
 
   async findById(
-    id: Wish['id'],
+    id: WishDto['id'],
     options: { owner: boolean } = { owner: false },
   ): Promise<Wish> {
     try {
@@ -29,13 +33,15 @@ export class WishesRepository {
     }
   }
 
-  create(createWishDto: CreateWishDto): Wish {
+  create(createWishDto: CreateWishDto, user: User): Wish {
     const wish = this.wishRepository.create(createWishDto);
+
+    wish.owner = user;
 
     return wish;
   }
 
-  async save(createWish: CreateWishDto): Promise<Wish> {
+  async save(createWish: Wish): Promise<Wish> {
     try {
       const wish = this.wishRepository.save(createWish);
 
@@ -46,7 +52,7 @@ export class WishesRepository {
   }
 
   async updateById(
-    wishId: Wish['id'],
+    wishId: WishDto['id'],
     updateWish: UpdateWishDto,
   ): Promise<void> {
     try {
@@ -56,7 +62,7 @@ export class WishesRepository {
     }
   }
 
-  async deleteById(wishId: Wish['id']): Promise<DeleteResult> {
+  async deleteById(wishId: WishDto['id']): Promise<DeleteResult> {
     try {
       return await this.wishRepository.delete({ id: wishId });
     } catch (error) {

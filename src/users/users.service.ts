@@ -4,10 +4,13 @@ import { Injectable } from '@nestjs/common';
 import { SALT } from '../utils/constants';
 
 import { UsersRepository } from './users.repository';
+
 import { User } from './entities/users.entity';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindUsersDto } from './dto/find-users.dto';
+import { UserDto } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -18,13 +21,13 @@ export class UsersService {
   }
 
   async findById(
-    id: User['id'],
+    id: UserDto['id'],
     options: { wishes: boolean } = { wishes: false },
   ): Promise<User> {
     return await this.usersRepository.findOneById(id, options);
   }
 
-  async findByUsername(username: User['username']): Promise<User> {
+  async findByUsername(username: UserDto['username']): Promise<User> {
     const user = await this.usersRepository.findOneByUsername(username);
 
     return user;
@@ -47,7 +50,7 @@ export class UsersService {
   }
 
   async updateById(
-    userId: User['id'],
+    userId: UserDto['id'],
     updateUserDto: UpdateUserDto,
   ): Promise<User> {
     if (updateUserDto.password) {
@@ -63,7 +66,10 @@ export class UsersService {
     return user;
   }
 
-  async hashPassword(password: User['password'], salt = SALT): Promise<string> {
+  async hashPassword(
+    password: UserDto['password'],
+    salt = SALT,
+  ): Promise<string> {
     const hashPassword = await bcrypt.hash(password, salt);
 
     return hashPassword;

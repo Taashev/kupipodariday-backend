@@ -1,5 +1,4 @@
 import {
-  IsDate,
   IsNotEmpty,
   IsNumber,
   IsString,
@@ -10,59 +9,57 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { Wish } from '../entities/wish.entity';
 import { Type } from 'class-transformer';
+
+import { UserDto } from 'src/users/dto/user.dto';
+import { OfferDto } from 'src/offers/dto/offer.dto';
 
 export class WishDto {
   @IsNotEmpty()
   @IsString()
   @IsUUID()
-  id: Wish['id'];
-
-  @IsNotEmpty()
-  @IsDate()
-  createdAt: Wish['createdAt'];
-
-  @IsNotEmpty()
-  @IsDate()
-  updatedAt: Wish['updatedAt'];
+  id: string;
 
   @IsNotEmpty()
   @IsString()
   @Length(1, 250)
-  name: Wish['name'];
+  name: string;
 
   @IsNotEmpty()
   @IsString()
   @IsUrl()
-  link: Wish['link'];
+  link: string;
 
   @IsNotEmpty()
   @IsString()
   @IsUrl()
-  image: Wish['image'];
+  image: string;
 
   @IsNotEmpty()
   @IsNumber()
   @Min(1)
-  price: Wish['price'];
+  price: number;
 
   @IsNotEmpty()
   @IsNumber()
   @Min(0)
-  raised: Wish['raised'];
+  raised: number;
 
   @IsNotEmpty()
   @IsNumber()
   @Min(0)
-  copied: Wish['copied'];
+  copied: number;
 
   @IsNotEmpty()
   @IsString()
   @Length(0, 1024)
-  description: Wish['description'];
+  description: string;
 
   @ValidateNested()
-  @Type(() => Wish['owner'])
-  owner: Wish['owner'];
+  @Type(() => UserDto)
+  owner: UserDto;
+
+  @ValidateNested()
+  @Type(() => OfferDto)
+  offers: OfferDto[];
 }

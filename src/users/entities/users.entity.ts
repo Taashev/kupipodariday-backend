@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 
 import { Wish } from 'src/wishes/entities/wish.entity';
+import { Offer } from 'src/offers/entities/offer.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -35,6 +36,9 @@ export class User {
   @Column({ default: 'https://i.pravatar.cc/300' })
   avatar: string;
 
-  @OneToMany(() => Wish, (wish) => wish.owner, { onDelete: 'CASCADE' })
+  @OneToMany(() => Wish, (wish) => wish.owner, { cascade: true })
   wishes: Wish[];
+
+  @OneToMany(() => Offer, (offer) => offer.user)
+  offers: Offer[];
 }
